@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SaaSify Cloud - Enterprise Automation</title>
+    <meta name="description" content="SaaSify delivers automated cloud management for modern teams.">
+</head>
+<body>
+    <header>
+        <h1>SaaSify Cloud Platform</h1>
+        <p>Automate your infrastructure deployments effortlessly.</p>
+    </header>
+    <main>
+        <div id="pricing-container">
+            <p>Loading pricing dynamically...</p>
+        </div>
+    </main>
+    <script>
+        // Pricing is only embedded inside JS execution, missing in static HTML
+        window.__PRICING_CONFIG__ = {
+            "tier": "Enterprise",
+            "price": "$499/mo",
+            "features": ["Unlimited nodes", "24/7 SLA"]
+        };
+    </script>
+</body>
+</html>
