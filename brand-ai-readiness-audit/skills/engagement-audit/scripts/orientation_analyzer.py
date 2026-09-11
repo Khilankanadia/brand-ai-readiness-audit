@@ -72,11 +72,11 @@ def audit_engagement_friction(html_content: str, url: str = "https://example.com
         findings.append({
             "id": "F-ENG-001",
             "title": "Missing Above-the-Fold H1 Value Proposition",
-            "severity": "high",
-            "evidence": "No <h1> element detected on the page. First-time visitors cannot immediately identify the site's primary function in the first 5 seconds.",
+            "severity": "medium",
+            "evidence": "No <h1> element was detected on the page. The page therefore lacks a conventional primary heading that explicitly identifies its main subject or purpose.",
             "suggested_action": {
                 "summary": "Introduce a clear, prominent <h1> tag above the fold articulating what the product or organization does.",
-                "priority": "high"
+                "priority": "medium"
             }
         })
     else:

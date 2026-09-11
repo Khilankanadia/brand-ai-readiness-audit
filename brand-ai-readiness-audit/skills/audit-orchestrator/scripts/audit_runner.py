@@ -24,12 +24,16 @@ sys.path.insert(0, os.path.join(MARKETPLACE_ROOT, "skills", "crawl-render-audit"
 sys.path.insert(0, os.path.join(MARKETPLACE_ROOT, "skills", "structured-data-audit", "scripts"))
 sys.path.insert(0, os.path.join(MARKETPLACE_ROOT, "skills", "freshness-corroboration", "scripts"))
 sys.path.insert(0, os.path.join(MARKETPLACE_ROOT, "skills", "engagement-audit", "scripts"))
+sys.path.insert(0, os.path.join(MARKETPLACE_ROOT, "skills", "audience-personalization-audit", "scripts"))
+sys.path.insert(0, os.path.join(MARKETPLACE_ROOT, "skills", "email-summary-audit", "scripts"))
 sys.path.insert(0, CURRENT_DIR)
 
 from diff_crawler import audit_crawl_render
 from schema_validator import audit_structured_data
 from entity_resolver import audit_freshness_entity
 from orientation_analyzer import audit_engagement_friction
+from personalization_analyzer import audit_audience_personalization
+from email_analyzer import audit_email_summary
 from compose_report import compose_final_report
 
 def fetch_live_site(url: str, timeout: int = 10):
@@ -85,7 +89,15 @@ def run_marketplace_audit(target: str, html_override: str = None, robots_overrid
     engagement_findings = audit_engagement_friction(html_content, url=target)
     all_raw_findings.extend(engagement_findings)
 
-    # 5. Compose and format into final standardized report schema
+    # 5. Audience Personalization & Prior Context Audit
+    personalization_findings = audit_audience_personalization(html_content, url=target)
+    all_raw_findings.extend(personalization_findings)
+
+    # 6. Email Summary & Extractability Audit
+    email_findings = audit_email_summary(html_content, url=target)
+    all_raw_findings.extend(email_findings)
+
+    # 7. Compose and format into final standardized report schema
     final_report = compose_final_report(site=site_name, raw_findings=all_raw_findings)
     return final_report
 

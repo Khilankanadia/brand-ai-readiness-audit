@@ -124,7 +124,7 @@ def audit_structured_data(html_content: str, url: str = "https://example.com"):
             "id": "F-DATA-002",
             "title": "No JSON-LD Structured Data on Page",
             "severity": "high",
-            "evidence": "0 Schema.org JSON-LD blocks found. AI answer engines (ChatGPT, Perplexity) must rely on error-prone heuristic parsing rather than grounded structured entities.",
+            "evidence": "0 Schema.org JSON-LD blocks were detected on the audited page. Important organization/product information therefore lacks this particular machine-readable representation.",
             "suggested_action": {
                 "summary": f"Add Schema.org JSON-LD to <head>. Example:\n```json\n{json.dumps(suggested_snippet, indent=2)}\n```",
                 "priority": "high"
@@ -160,7 +160,7 @@ def audit_structured_data(html_content: str, url: str = "https://example.com"):
             "id": "F-DATA-004",
             "title": "Missing Meta & OpenGraph Description",
             "severity": "medium",
-            "evidence": "Neither <meta name='description'> nor <meta property='og:description'> were found. Search and retrieval snippet generation is unconstrained.",
+            "evidence": "Neither <meta name='description'> nor <meta property='og:description'> was detected, so the page does not provide these explicit metadata descriptions for search/social retrieval contexts.",
             "suggested_action": {
                 "summary": "Add a clear 150-160 character meta description summarizing the core brand value proposition.",
                 "priority": "medium"

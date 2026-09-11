@@ -21,9 +21,9 @@ def audit_freshness_entity(html_content: str, url: str = "https://example.com"):
             "id": "F-ENT-001",
             "title": "Missing Canonical URL Declaration",
             "severity": "medium",
-            "evidence": "No <link rel='canonical'> found. AI crawlers may index duplicate paths or staging URLs inconsistently.",
+            "evidence": "No canonical URL declaration was detected. The page therefore does not explicitly declare its preferred URL through the canonical link mechanism.",
             "suggested_action": {
-                "summary": f"Add `<link rel='canonical' href='{url}'>` to the <head> of every primary page.",
+                "summary": f"Add `<link rel='canonical' href='{url}'>` to the <head> of every primary page if multiple equivalent URLs exist.",
                 "priority": "medium"
             }
         })
@@ -41,7 +41,7 @@ def audit_freshness_entity(html_content: str, url: str = "https://example.com"):
             "id": "F-ENT-002",
             "title": "Unanchored Entity: Missing sameAs Authority Links",
             "severity": "medium",
-            "evidence": "No verified sameAs links to Wikidata, Crunchbase, Wikipedia, or official social profiles found in structured data. Increases entity confusion with homonyms.",
+            "evidence": "No verified sameAs references were detected in the structured data. The organization therefore provides fewer explicit machine-readable links connecting this page to authoritative external identity references.",
             "suggested_action": {
                 "summary": "Populate the `sameAs` array in Organization schema with URLs to Wikidata, Crunchbase, LinkedIn, and official repositories.",
                 "priority": "medium"

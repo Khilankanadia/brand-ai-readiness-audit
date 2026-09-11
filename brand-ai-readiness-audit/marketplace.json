@@ -28,6 +28,16 @@
       "id": "engagement-audit",
       "name": "On-Site Engagement & Friction Audit",
       "path": "skills/engagement-audit"
+    },
+    {
+      "id": "audience-personalization-audit",
+      "name": "Audience Personalization & Prior Context Audit",
+      "path": "skills/audience-personalization-audit"
+    },
+    {
+      "id": "email-summary-audit",
+      "name": "Email Summary & Extractability Audit",
+      "path": "skills/email-summary-audit"
     }
   ]
 }

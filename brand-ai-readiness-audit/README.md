@@ -6,7 +6,7 @@
 
 ## 1. Marketplace Architecture & Composition
 
-The marketplace decomposes reasoning cleanly across **4 domain-specific skills** mapped directly to the Round-2 failure mechanisms (Appendix A–F), orchestrated by **1 designated entrypoint skill**:
+The marketplace decomposes reasoning cleanly across **6 domain-specific skills** mapped directly to the Round-2 failure mechanisms (Appendix A–F), orchestrated by **1 designated entrypoint skill**:
 
 ```
 brand-ai-readiness-audit/
@@ -48,6 +48,14 @@ brand-ai-readiness-audit/
     │   ├── scripts/entity_resolver.py       # sameAs knowledge graph grounding & copyright staleness
     │   └── references/corroboration_rules.md
     │
+    ├── audience-personalization-audit/      # Appendix E: Personalization & Prior Context
+    │   ├── SKILL.md
+    │   └── scripts/personalization_analyzer.py
+    │
+    ├── email-summary-audit/                 # Appendix F: Email Summary Extractability
+    │   ├── SKILL.md
+    │   └── scripts/email_analyzer.py
+    │
     └── engagement-audit/                    # On-Site Half: Visitor Orientation & Friction
         ├── SKILL.md
         ├── scripts/orientation_analyzer.py  # 5-second rule (H1), nav complexity & trust anchors
@@ -69,12 +77,16 @@ flowchart TD
         Entrypoint --> S2[skills/structured-data-audit<br/>• Schema.org Validation<br/>• Plain-Text Fact Quotability<br/>• Meta & OpenGraph]
         Entrypoint --> S3[skills/freshness-corroboration<br/>• sameAs Entity Anchors<br/>• Copyright & Claim Staleness<br/>• Canonical URL]
         Entrypoint --> S4[skills/engagement-audit<br/>• 5-Sec Above-the-Fold H1<br/>• Menu Cognitive Load<br/>• Trust & Friction Links]
+        Entrypoint --> S5[skills/audience-personalization-audit<br/>• hreflang & og:locale<br/>• Personalization Signals]
+        Entrypoint --> S6[skills/email-summary-audit<br/>• Text-to-Image Ratio<br/>• Alt Text Fallbacks]
     end
 
     S1 --> Aggregator[skills/audit-orchestrator/scripts/compose_report.py]
     S2 --> Aggregator
     S3 --> Aggregator
     S4 --> Aggregator
+    S5 --> Aggregator
+    S6 --> Aggregator
 
     Aggregator --> Dedupe[Multi-Signal Deduplication & Confidence Suppression]
     Dedupe --> Proactive[Guarantee Proactive Action e.g. llms.txt]
