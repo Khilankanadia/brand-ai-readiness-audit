@@ -110,6 +110,35 @@ class TestMarketplaceFixtures(unittest.TestCase):
         has_proactive = any(f["severity"] == "low" or "proactive" in f["title"].lower() for f in report["findings"])
         self.assertTrue(has_proactive, "Golden site should still receive proactive recommendations")
 
+    def test_grouped_robots_txt_user_agents(self):
+        robots_content = "User-agent: GPTBot\nUser-agent: ClaudeBot\nDisallow: /\n"
+        html_content = "<html><body><h1>Test</h1></body></html>"
+        report = run_marketplace_audit(target="testsite.com", html_override=html_content, robots_override=robots_content)
+        self._validate_schema(report)
+        titles = [f["title"] for f in report["findings"]]
+        self.assertTrue(any("AI Assistant Crawlers Explicitly Blocked" in t for t in titles))
+        evidences = [f["evidence"] for f in report["findings"] if "AI Assistant Crawlers Explicitly Blocked" in f["title"]]
+        self.assertTrue(any("GPTBot" in e and "ClaudeBot" in e for e in evidences))
+
+    def test_golden_site_wikidata_suppression(self):
+        html_with_wikidata = """
+        <html><head><title>Golden</title>
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Golden Corp",
+          "sameAs": ["https://www.wikidata.org/wiki/Q12345"]
+        }
+        </script>
+        </head><body><h1>Golden</h1></body></html>
+        """
+        report = run_marketplace_audit(target="goldencorp.com", html_override=html_with_wikidata)
+        self._validate_schema(report)
+        # Verify F-ENT-P01 proactive Wikidata suggestion is suppressed because Wikidata is already present
+        titles = [f["title"] for f in report["findings"]]
+        self.assertFalse(any("Claim and Anchor Wikidata Entity ID" in t for t in titles))
+
 def main():
     print("=" * 70)
     print("RUNNING SYNTHETIC FIXTURE VALIDATION SUITE")
@@ -118,7 +147,7 @@ def main():
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
     if result.wasSuccessful():
-        print("\n[SUCCESS] All 5 Synthetic Fixture Tests Passed (100% Precision, 0 False Positives).")
+        print("\n[SUCCESS] All Synthetic Fixture & Edge Case Tests Passed (100% Precision, 0 False Positives).")
         sys.exit(0)
     else:
         print("\n[FAIL] Fixture tests failed.")

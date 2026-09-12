@@ -52,6 +52,8 @@ class EngagementExtractor(HTMLParser):
             text = " ".join(self.curr_link_text).strip()
             if self.curr_link_href:
                 self.links.append((self.curr_link_href, text))
+            self.curr_link_href = None
+            self.curr_link_text = []
 
     def handle_data(self, data):
         if self.in_h1:

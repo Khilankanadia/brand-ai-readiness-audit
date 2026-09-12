@@ -23,6 +23,8 @@ Use this designated entrypoint skill to run a complete, end-to-end Brand AI Disc
    - Run `structured-data-audit` to validate Schema.org JSON-LD syntax, schema completeness, and meta tags.
    - Run `freshness-corroboration` to inspect `sameAs` entity links, canonical URLs, and copyright freshness.
    - Run `engagement-audit` to inspect above-the-fold orientation, navigation cognitive load, and trust signals.
+   - Run `audience-personalization-audit` to inspect `hreflang` tags, `og:locale`, and HTML `lang` attributes.
+   - Run `email-summary-audit` to inspect text-to-image ratios and image `alt` text fallbacks.
 3. **Merge & De-duplicate Findings**:
    - Combine all findings from child skills.
    - Suppress redundant or overlapping findings using multi-signal corroboration rules.

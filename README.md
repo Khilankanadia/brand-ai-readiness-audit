@@ -48,13 +48,15 @@ brand-ai-readiness-audit/
     │   ├── scripts/entity_resolver.py       # sameAs knowledge graph grounding & copyright staleness
     │   └── references/corroboration_rules.md
     │
-    ├── audience-personalization-audit/      # Appendix E: Personalization & Prior Context
+    ├── audience-personalization-audit/      # Appendix E
     │   ├── SKILL.md
-    │   └── scripts/personalization_analyzer.py
+    │   ├── scripts/personalization_analyzer.py
+    │   └── references/
     │
-    ├── email-summary-audit/                 # Appendix F: Email Summary Extractability
+    ├── email-summary-audit/                 # Appendix F
     │   ├── SKILL.md
-    │   └── scripts/email_analyzer.py
+    │   ├── scripts/email_analyzer.py
+    │   └── references/
     │
     └── engagement-audit/                    # On-Site Half: Visitor Orientation & Friction
         ├── SKILL.md
@@ -107,7 +109,7 @@ To prove generalization across unseen domains without overfitting, the marketpla
 ```bash
 python tests/run_fixtures.py
 ```
-* **5/5 Fixture Tests Passing (100% Precision, 0.017s Runtime)**
+* **7/7 Fixture Tests Passing (100% Precision, 0.015s Runtime)**
 * **Zero False Positives:** Golden control site (`fixture_golden_site.html`) triggered $0$ critical/high defect false positives while correctly outputting proactive recommendations.
 
 ### Real-World Unseen Generalization Test Matrix

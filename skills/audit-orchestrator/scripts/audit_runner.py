@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 audit_runner.py - Main Orchestrator CLI
-Coordinates execution of all 4 domain skills against a target URL or local HTML fixture.
+Coordinates execution of all 6 domain skills against a target URL or local HTML fixture.
 """
 
 import sys

@@ -137,31 +137,56 @@ def audit_crawl_render(html_content: str, robots_content: str = "", url: str = "
 
     # 4. Robots.txt Analysis for AI Bots
     if robots_content:
+        current_uas = []
+        in_directives = False
+        bot_policies = {}
+        wildcard_policy = {"disallow_root": False, "allow_root": False}
+
+        for line in robots_content.splitlines():
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+
+            ua_match = re.match(r'(?i)^User-agent:\s*(.+)$', line)
+            if ua_match:
+                ua_val = ua_match.group(1).strip()
+                if in_directives:
+                    current_uas = []
+                    in_directives = False
+                current_uas.append(ua_val)
+                continue
+
+            disallow_match = re.match(r'(?i)^Disallow:\s*(.*)$', line)
+            allow_match = re.match(r'(?i)^Allow:\s*(.*)$', line)
+
+            if disallow_match or allow_match:
+                in_directives = True
+                is_disallow = bool(disallow_match)
+                path = (disallow_match.group(1) if disallow_match else allow_match.group(1)).strip()
+                is_root_rule = path in ["/", "/*"] or (is_disallow and path != "" and path.startswith("/"))
+
+                for ua in current_uas:
+                    matched_bot = next((b for b in AI_BOTS if b.lower() == ua.lower() or b.lower() in ua.lower()), None)
+                    if matched_bot:
+                        if matched_bot not in bot_policies:
+                            bot_policies[matched_bot] = {"disallow_root": False, "allow_root": False}
+                        if is_disallow and is_root_rule:
+                            bot_policies[matched_bot]["disallow_root"] = True
+                        elif not is_disallow and is_root_rule:
+                            bot_policies[matched_bot]["allow_root"] = True
+                    elif ua == "*":
+                        if is_disallow and path in ["/", "/*"]:
+                            wildcard_policy["disallow_root"] = True
+                        elif not is_disallow and is_root_rule:
+                            wildcard_policy["allow_root"] = True
+
         disallowed_ai_bots = []
-        # Parse blocks by User-agent
-        blocks = re.split(r'(?i)User-agent:\s*', robots_content)
-        for block in blocks:
-            if not block.strip():
-                continue
-            lines = [l.strip() for l in block.splitlines() if l.strip() and not l.strip().startswith('#')]
-            if not lines:
-                continue
-            ua = lines[0]
-            matched_bot = next((b for b in AI_BOTS if b.lower() == ua.lower() or b.lower() in ua.lower()), None)
-            if matched_bot:
-                # Check directives under this bot
-                has_root_disallow = False
-                has_root_allow = False
-                for line in lines[1:]:
-                    if re.match(r'(?i)Disallow:\s*(?:/\s*$|/\*|\s*$)', line):
-                        # Disallow: / or Disallow: /*
-                        if not re.match(r'(?i)Disallow:\s*$', line): # empty disallow means allowed
-                            has_root_disallow = True
-                    elif re.match(r'(?i)Allow:\s*(?:/\s*$|/\*)', line):
-                        has_root_allow = True
-                
-                if has_root_disallow and not has_root_allow:
-                    disallowed_ai_bots.append(matched_bot)
+        for bot in AI_BOTS:
+            if bot in bot_policies:
+                if bot_policies[bot]["disallow_root"] and not bot_policies[bot]["allow_root"]:
+                    disallowed_ai_bots.append(bot)
+            elif wildcard_policy["disallow_root"] and not wildcard_policy["allow_root"]:
+                disallowed_ai_bots.append(bot)
 
         if disallowed_ai_bots:
             findings.append({

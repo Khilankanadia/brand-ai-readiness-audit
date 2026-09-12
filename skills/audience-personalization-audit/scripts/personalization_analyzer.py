@@ -11,13 +11,13 @@ def audit_audience_personalization(html_content: str, url: str) -> List[Dict[str
     html_lower = html_content.lower()
 
     # Check 1: HTML lang attribute
-    lang_match = re.search(r'<html[^>]*lang=["\']([^"\']+)["\']', html_lower)
-    if not lang_match:
+    lang_match = re.search(r'<html[^>]*lang=["\']([^"\']*)["\']', html_lower)
+    if not lang_match or not lang_match.group(1).strip():
         findings.append({
             "id": "F-PERSONALIZE-001",
             "title": "Missing HTML Language Declaration",
             "severity": "medium",
-            "evidence": "The root <html> element does not declare a lang attribute, so the page does not explicitly identify its primary language in machine-readable HTML metadata.",
+            "evidence": "The root <html> element does not declare a valid lang attribute, so the page does not explicitly identify its primary language in machine-readable HTML metadata.",
             "suggested_action": {
                 "summary": "Declare the page's primary language using the HTML lang attribute, e.g. <html lang=\"en\">.",
                 "priority": "medium"

@@ -31,8 +31,11 @@ def audit_freshness_entity(html_content: str, url: str = "https://example.com"):
     # 2. Check sameAs in JSON-LD
     same_as_matches = re.findall(r'["\']sameAs["\']\s*:\s*(\[[^\]]*\]|"[^"]*")', html_content)
     has_authoritative_same_as = False
+    has_wikidata = False
     if same_as_matches:
         combined = " ".join(same_as_matches).lower()
+        if "wikidata.org" in combined:
+            has_wikidata = True
         if any(kb in combined for kb in ["wikidata.org", "wikipedia.org", "crunchbase.com", "linkedin.com", "github.com", "x.com", "twitter.com"]):
             has_authoritative_same_as = True
 
@@ -64,17 +67,18 @@ def audit_freshness_entity(html_content: str, url: str = "https://example.com"):
                 }
             })
 
-    # 4. Proactive Knowledge Graph Disambiguation Suggestion
-    findings.append({
-        "id": "F-ENT-P01",
-        "title": "Proactive Opportunity: Claim and Anchor Wikidata Entity ID",
-        "severity": "low",
-        "evidence": "Linking directly to a Wikidata item (Q-ID) in Schema.org provides an unambiguous persistent identifier across all major LLM knowledge graphs.",
-        "suggested_action": {
-            "summary": "Create or claim a Wikidata entry for the organization and reference its Q-ID in the JSON-LD `@id` attribute.",
-            "priority": "low"
-        }
-    })
+    # 4. Proactive Knowledge Graph Disambiguation Suggestion (if Wikidata not already linked)
+    if not has_wikidata and "wikidata.org" not in html_content.lower():
+        findings.append({
+            "id": "F-ENT-P01",
+            "title": "Proactive Opportunity: Claim and Anchor Wikidata Entity ID",
+            "severity": "low",
+            "evidence": "Linking directly to a Wikidata item (Q-ID) in Schema.org provides an unambiguous persistent identifier across all major LLM knowledge graphs.",
+            "suggested_action": {
+                "summary": "Create or claim a Wikidata entry for the organization and reference its Q-ID in the JSON-LD `@id` attribute.",
+                "priority": "low"
+            }
+        })
 
     return findings
 

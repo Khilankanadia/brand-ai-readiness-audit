@@ -33,7 +33,7 @@ class SchemaExtractor(HTMLParser):
     def handle_starttag(self, tag, attrs):
         attr_dict = dict(attrs)
 
-        if tag == "script" and attr_dict.get("type", "").lower() == "application/ld+json":
+        if tag == "script" and "application/ld+json" in attr_dict.get("type", "").lower():
             self.in_json_ld = True
             self.current_json_data = []
 
