@@ -9,7 +9,7 @@
 The marketplace decomposes reasoning cleanly across **6 domain-specific skills** mapped directly to the Round-2 failure mechanisms (Appendix A–F), orchestrated by **1 designated entrypoint skill**:
 
 ```
-brand-ai-readiness-audit/
+. (Marketplace Root Directory)/
 ├── marketplace.json                         # Marketplace manifest defining all skills & entrypoint
 ├── README.md                                # Full documentation, composition guide & benchmark results
 ├── tests/
@@ -48,15 +48,15 @@ brand-ai-readiness-audit/
     │   ├── scripts/entity_resolver.py       # sameAs knowledge graph grounding & copyright staleness
     │   └── references/corroboration_rules.md
     │
-    ├── audience-personalization-audit/      # Appendix E
+    ├── audience-personalization-audit/      # Appendix E: Localization & User Personalization Context
     │   ├── SKILL.md
     │   ├── scripts/personalization_analyzer.py
-    │   └── references/
+    │   └── references/localization_heuristics.md
     │
-    ├── email-summary-audit/                 # Appendix F
+    ├── email-summary-audit/                 # Appendix F: Plain-Text Ratio & Email Summary Extractability
     │   ├── SKILL.md
     │   ├── scripts/email_analyzer.py
-    │   └── references/
+    │   └── references/email_extractability_rules.md
     │
     └── engagement-audit/                    # On-Site Half: Visitor Orientation & Friction
         ├── SKILL.md
